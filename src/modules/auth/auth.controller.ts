@@ -23,6 +23,13 @@ export class AuthController {
     return req.user;
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  logout(@Req() req: any) {
+    // console.log(req.user);
+    return this.authService.logout(req.user.sessionUuid);
+  }
+
   @Post('register')
   register(
     @Body()

@@ -61,20 +61,24 @@ export class UsersService {
     });
   }
 
-  // async logoutSession(sessionUuid: string) {
-  //   return this.prisma.userSession.update({
-  //     where: {
-  //       sessionUuid,
-  //     },
+  /* Logout from device by verfiying sessionUuid from sessions */
+  async logoutSession(sessionUuid: string) {
+    return this.prisma.userSession.update({
+      where: {
+        sessionUuid,
+      },
 
-  //     data: {
-  //       isActive: false,
+      data: {
+        isActive: false,
 
-  //       logoutAt: new Date(),
-  //     },
-  //   });
-  // }
+        logoutAt: new Date(),
 
+        lastActivityAt: new Date(),
+      },
+    });
+  }
+
+  /* Find Active session from sessionUuid from sessions */
   async findSessionByUuid(sessionUuid: string) {
     return this.prisma.userSession.findUnique({
       where: {
@@ -82,6 +86,8 @@ export class UsersService {
       },
     });
   }
+
+  /* Update Last Acticity of user and stores datetime of lastactivity */
   async updateLastActivity(sessionUuid: string) {
     return this.prisma.userSession.update({
       where: {
