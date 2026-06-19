@@ -109,4 +109,15 @@ export class AuthService {
       },
     };
   }
+
+  /* Function to validate logout from active session */
+  async logout(sessionUuid: string) {
+    await this.usersService.logoutSession(sessionUuid);
+
+    this.logger.log(`User logged out: ${sessionUuid}`, AuthService.name);
+
+    return {
+      message: AUTH_MESSAGES.LOGOUT_SUCCESS,
+    };
+  }
 }
