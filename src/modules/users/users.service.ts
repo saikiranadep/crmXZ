@@ -14,6 +14,14 @@ export class UsersService {
     });
   }
 
+  async findByUuid(uuid: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        uuid,
+      },
+    });
+  }
+
   async createUser(data: {
     firstName: string;
     lastName: string;
@@ -32,6 +40,56 @@ export class UsersService {
       },
       data: {
         refreshToken,
+      },
+    });
+  }
+
+  /* create User Session and store in user_sessions table  */
+  async createSession(data: {
+    userId: bigint;
+    ipAddress?: string;
+    userAgent?: string;
+  }) {
+    return this.prisma.userSession.create({
+      data: {
+        userId: data.userId,
+
+        ipAddress: data.ipAddress,
+
+        userAgent: data.userAgent,
+      },
+    });
+  }
+
+  // async logoutSession(sessionUuid: string) {
+  //   return this.prisma.userSession.update({
+  //     where: {
+  //       sessionUuid,
+  //     },
+
+  //     data: {
+  //       isActive: false,
+
+  //       logoutAt: new Date(),
+  //     },
+  //   });
+  // }
+
+  async findSessionByUuid(sessionUuid: string) {
+    return this.prisma.userSession.findUnique({
+      where: {
+        sessionUuid,
+      },
+    });
+  }
+  async updateLastActivity(sessionUuid: string) {
+    return this.prisma.userSession.update({
+      where: {
+        sessionUuid,
+      },
+
+      data: {
+        lastActivityAt: new Date(),
       },
     });
   }

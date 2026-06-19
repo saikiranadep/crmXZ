@@ -10,10 +10,14 @@ import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import type { StringValue } from 'ms';
 
+import { PassportModule } from '@nestjs/passport';
+
+import { JwtStrategy } from './strategies/jwt.strategy';
+
 @Module({
   imports: [
     UsersModule,
-
+    PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
 
@@ -24,7 +28,7 @@ import type { StringValue } from 'ms';
 
         signOptions: {
           expiresIn: (configService.get<string>('JWT_ACCESS_EXPIRES_IN') ??
-            '15m') as StringValue,
+            '1d') as StringValue,
         },
       }),
     }),
@@ -32,6 +36,6 @@ import type { StringValue } from 'ms';
 
   controllers: [AuthController],
 
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}
